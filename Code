@@ -1,0 +1,396 @@
+Room.cpp
+#include "Room.h"
+#include <iostream>
+#include<iomanip>
+#include <string>
+using namespace std;
+
+// Room class implementation
+Room::Room() {
+    number = 0;
+    type = "";
+    cost = 0.0;
+}
+
+Room::Room(int number1, string type1, double cost1) {
+    number = number1;
+    type = type1;
+    cost = cost1;
+}
+
+Room::~Room() {}
+
+// StandardRoom class implementation
+StandardRoom::StandardRoom() : Room() {}
+
+StandardRoom::StandardRoom(int number1, double cost1)
+    : Room(number1, "Standard", cost1) {}
+
+StandardRoom::~StandardRoom() {}
+
+void StandardRoom::display() {
+    cout << "Standard Room Number: " << number << endl;
+    cout << "Type: " << type << endl;
+    cout << "Cost: " << cost << endl;
+}
+
+// Suite class implementation
+Suite::Suite() : Room() {}
+
+Suite::Suite(int number1, double cost1)
+    : Room(number1, "Suite", cost1) {}
+
+Suite::~Suite() {}
+
+void Suite::display() {
+    cout << "Suite Number: " << number << endl;
+    cout << "Type: " << type << endl;
+    cout << "Cost: " << cost << endl;
+}
+
+room.h
+#include <iostream>
+#include<iomanip>
+#include <string>
+#pragma once
+using namespace std;
+
+class Hotel;
+class Room {
+protected:
+    int number;
+    string type;
+    double cost;
+    Hotel* hotel;
+
+public:
+    // Constructors and destructor
+    Room();
+    Room(int number, string type, double cost);
+    virtual ~Room();
+
+    // Getters and setters
+    int getNumber() { return number; };
+    string getType() { return type; };
+    double getCost() { return cost; };
+    Hotel* getHotel() { return hotel; }
+    void setNumber(int num) { number = num; };
+    void setType(string t) { type = t; };
+    void setCost(double c) { cost = c; };
+
+    // Virtual function to display room details
+    virtual void display();
+};
+
+class StandardRoom : public Room {
+public:
+    // Constructors and destructor
+    StandardRoom();
+    StandardRoom(int number, double cost);
+    virtual ~StandardRoom();
+
+    // Function to display standard room details
+    void display();
+};
+
+class Suite : public Room {
+public:
+    // Constructors and destructor
+    Suite();
+    Suite(int number, double cost);
+    virtual ~Suite();
+
+    // Function to display suite details
+    void display();
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Reservation .h
+
+include <iostream>
+#include <string>
+#pragma once
+using namespace std;
+
+class Reservation {
+private:
+    string guestName;
+    string roomType;
+    int numGuests;
+    int sdy, sdm, sdd;
+    int edy, edm, edd;
+
+public:
+    // Constructors
+    Reservation();
+    Reservation(string guestName, string roomType, int numGuests, int sdy, int sdm, int sdd, int edy, int edm, int edd);
+    virtual ~Reservation();
+
+    // Getters and setters
+    string getGuestName() { return guestName; }
+    string getRoomType() { return roomType; }
+    int getNumGuests() { return numGuests; }
+    int getsdy() { return sdy; }
+    int getsdm() { return sdm; }
+    int getsdd() { return sdd; }
+    int getedy() { return edy; }
+    int getedm() { return edm; }
+    int getedd() { return edd; }
+    void setGuestName(string gn) { guestName = gn; }
+    void setRoomType(string rt) { roomType = rt; }
+    void setNumGuests(int ng) { numGuests = ng; }
+    void setsdy(int sdy1) { sdy = sdy1; }
+    void setsdm(int sdm1) { sdm = sdm1; }
+    void setsdd(int sdd1) { sdd = sdd1; }
+    void setedy(int edy1) { edy = edy1; }
+    void setedm(int edm1) { edm = edm1; }
+    void setedd(int edd1) { edd = edd1; }
+
+    // Overloaded operators
+    Reservation operator+(Reservation r);
+    Reservation operator-(Reservation r);
+
+    // Display method
+    virtual void display();
+};
+
+
+
+
+
+Reservation .cpp
+
+// Reservation class implementation
+
+#include "reservation.h"
+#include <iostream>
+#include <iomanip>
+#include <string>
+using namespace std;
+
+// Default constructor
+Reservation::Reservation() {
+    guestName = "";
+    roomType = "";
+    numGuests = 0;
+    sdy = 0;
+    sdm = 0;
+    sdd = 0;
+    edy = 0;
+    edm = 0;
+    edd = 0;
+}
+
+// Parameterized constructor
+Reservation::Reservation(string guestName1, string roomType1, int numGuests1, int sdy1, int sdm1, int sdd1, int edy1, int edm1, int edd1) {
+    guestName = guestName1;
+    roomType = roomType1;
+    numGuests = numGuests1;
+    sdy = sdy1;
+    sdm = sdm1;
+    sdd = sdd1;
+    edy = edy1;
+    edm = edm1;
+    edd = edd1;
+}
+
+// Destructor
+Reservation::~Reservation() {
+}
+
+// Overloaded + operator
+Reservation Reservation::operator+(Reservation r) {
+    Reservation result(guestName, roomType, numGuests, sdy, sdm, sdd, edy, edm, edd);
+    result.edd += r.edd;
+    result.edm += r.edm;
+    result.edy += r.edy;
+
+    if (result.edd > 30) {
+        result.edm += result.edd / 30;
+        result.edd %= 30;
+    }
+    if (result.edm > 12) {
+        result.edy += result.edm / 12;
+        result.edm %= 12;
+    }
+    return result;
+}
+
+// Overloaded - operator
+Reservation Reservation::operator-(Reservation r) {
+    Reservation result(guestName, roomType, numGuests, sdy, sdm, sdd, edy, edm, edd);
+    result.edd -= r.edd;
+    result.edm -= r.edm;
+    result.edy -= r.edy;
+    if (result.edd < 1) {
+        result.edm--;
+        result.edd += 30;
+    }
+    if (result.edm < 1) {
+        result.edy--;
+        result.edm += 12;
+    }
+    return result;
+}
+
+// Display method
+void Reservation::display() {
+    cout << "Guest Name: " << guestName << endl;
+    cout << "Room Type: " << roomType << endl;
+    cout << "Number of Guests: " << numGuests << endl;
+    cout << "Start Date: " << sdy << "/" << sdm << "/" << sdd << endl;
+    cout << "End Date: " << edy << "/" << edm << "/" << edd << endl;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Customer.h
+
+#include <iostream>
+#include <string>
+#include "Reservation.h"
+using namespace std;
+
+class Customer {
+private:
+    string firstName;
+    string lastName;
+    string email;
+    string phoneNumber;
+    Reservation* reservation1;
+
+public:
+    // Default constructor
+    Customer();
+
+    // Parameterized constructor
+    Customer(string firstName, string lastName, string email, string phoneNumber, Reservation* reservation1);
+
+    // Destructor
+    virtual ~Customer();
+
+    // Getter methods
+    string getFirstName() { return firstName; }
+    string getLastName() { return lastName; }
+    string getEmail() { return email; }
+    string getPhoneNumber() { return phoneNumber; }
+    Reservation* getReservation() { return reservation1; }
+
+    // Setter methods
+    void setFirstName(string fn) { firstName = fn; }
+    void setLastName(string ln) { lastName = ln; }
+    void setEmail(string e) { email = e; }
+    void setPhoneNumber(string pnum) { phoneNumber = pnum; }
+    void setReservation(Reservation* reservation2) { reservation1 = reservation2; }
+
+    // Display method to show customer information
+    virtual void display();
+};
+
+
+Customer.cpp
+
+#include "customer.h"
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Default constructor initializes member variables
+Customer::Customer() {
+    firstName = "";
+    lastName = "";
+    email = "";
+    phoneNumber = "";
+    reservation1 = nullptr;
+}
+
+// Parameterized constructor sets member variables based on input
+Customer::Customer(string firstName1, string lastName1, string email1, string phoneNumber1, Reservation* reservation2) {
+    firstName = firstName1;
+    lastName = lastName1;
+    email = email1;
+    phoneNumber = phoneNumber1;
+    reservation1 = reservation2;
+}
+
+// Destructor to clean up memory
+Customer::~Customer() {}
+
+// Display method to output customer information
+void Customer::display() {
+    cout << "First Name: " << firstName << endl;
+    cout << "Last Name: " << lastName << endl;
+    cout << "Email: " << email << endl;
+    cout << "Phone Number: " << phoneNumber << endl;
+    cout << "Reservation Information:" << endl;
+    (*reservation1).display();
+}
+
+
+Menu.h
+//Nash Nie 400439839
+#pragma once
+class Menu
+{
+private:
+    int Display();
+    bool Register();
+    bool Status();
+    bool Manage();
+    bool GenerateReport();
+    bool ProfitReport();
+    void MakeReservation();
+ 
+public:
+    //Constructor
+    Menu();
+    void Run();
+};
